@@ -78,26 +78,75 @@ int main()
 	BinaryFileRecord *rec3 = new BinaryFileRecord();	
 	BinaryFileRecord *rec4 = new BinaryFileRecord();
 
-
+	/*
+ 	*	Get everything out of the file
+ 	*
+ 	*/ 
 	ifstream binInFile("cs3377.bin",ios::in|ios::binary);
-	binInFile.read((char*)header,sizeof(BinaryFileRecord));
+	binInFile.read((char*)header,sizeof(BinaryFileHeader));
 	
-	if((int)header->numRecords >= 1)
-	{
-	}
+	binInFile.read((char*)rec1,sizeof(BinaryFileRecord));
+	binInFile.read((char*)rec2,sizeof(BinaryFileRecord));
+	binInFile.read((char*)rec3,sizeof(BinaryFileRecord));
+	binInFile.read((char*)rec4,sizeof(BinaryFileRecord));
+
+	//Convert to strings
 
 	std::stringstream stream;
 	stream << "Magic: 0x" << hex << (int)header->magicNumber;
 	string magic(stream.str());
-  	setCDKMatrixCell(myMatrix, 1, 1,magic.c_str());
-	stringstream str2;
+  	stringstream str2;
 	str2 << "Version: " << (int)header->versionNumber;
 	string vers(str2.str());
-	setCDKMatrixCell(myMatrix, 1, 2,vers.c_str());
 	stringstream str3;
 	str3 << "NumRecords: " << (int)header->numRecords;
 	string recs(str3.str());
+	
+	std::stringstream r1;
+	r1 << "strlen: " << (int)rec1->strLength;
+	string strln1(r1.str());
+	r1.str("");
+	r1 << (char*)rec1->stringBuffer;
+	string re1(r1.str());
+
+        std::stringstream r2;
+        r2 << "strlen: " << (int)rec2->strLength;
+        string strln2(r2.str());
+        r2.str("");
+        r2 << (char*)rec2->stringBuffer;
+        string re2(r2.str());
+       
+	std::stringstream r3;
+        r3 << "strlen: " << (int)rec3->strLength;
+        string strln3(r3.str());
+        r3.str("");
+        r3 << (char*)rec3->stringBuffer;
+        string re3(r3.str());
+        
+	std::stringstream r4;
+        r4 << "strlen: " << (int)rec4->strLength;
+        string strln4(r4.str());
+        r4.str("");
+        r4 << (char*)rec4->stringBuffer;
+        string re4(r4.str());
+
+	//Put in the matrix
+
+	setCDKMatrixCell(myMatrix, 1, 1,magic.c_str());
+	setCDKMatrixCell(myMatrix, 1, 2,vers.c_str());
 	setCDKMatrixCell(myMatrix, 1, 3,recs.c_str());
+
+	setCDKMatrixCell(myMatrix, 2, 1,strln1.c_str());
+	setCDKMatrixCell(myMatrix, 2, 2,re1.c_str());
+
+        setCDKMatrixCell(myMatrix, 3, 1,strln2.c_str());
+        setCDKMatrixCell(myMatrix, 3, 2,re2.c_str());
+
+        setCDKMatrixCell(myMatrix, 4, 1,strln3.c_str());
+        setCDKMatrixCell(myMatrix, 4, 2,re3.c_str());
+
+        setCDKMatrixCell(myMatrix, 5, 1,strln4.c_str());
+        setCDKMatrixCell(myMatrix, 5, 2,re4.c_str());
 
 
   	drawCDKMatrix(myMatrix, true);    /* required  */
